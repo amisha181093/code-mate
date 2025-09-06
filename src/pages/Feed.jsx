@@ -1,8 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../Component/Header'
 
-const Feed = () => {
+const userData = {
+  name: 'Janvi Kapoor',
+  age:32,
+  about: 'i am new about',
+  email: 'a@a.com',
+  phone: '9891154187',
+  profilePic: 'https://rmkv.com/cdn/shop/articles/janhvi_new_saree_1100x.jpg?v=1726657104'
+}
+
+const Feed = ({profileId}) => {
+  const [profileList, setProfileList] = useState([]); 
+  
+  useEffect(()=>{
+    // make an api call to recieve list and after recieving data put it in the variable
+    const data = []; 
+
+    setProfileList(data);
+  }, [])
+
+
   return (
     <div>
     <div className="min-h-screen bg-gray-50">
@@ -16,12 +35,12 @@ const Feed = () => {
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="relative">
             <img
-              src=""
+              src={userData?.profilePic}
               alt="Profile"
               className="w-full h-64 object-cover"
             />
             <div className="absolute bottom-4 left-4 text-white">
-              <h2 className="text-xl font-semibold">Nitin Gadkari, 46</h2>
+              <h2 className="text-xl font-semibold">{userData?.name}, {userData?.age}</h2>
               <p className="text-sm">male</p>
               <span className="mt-1 inline-block bg-pink-600 text-white text-xs px-2 py-1 rounded-md">
                 Vasundhara
@@ -106,3 +125,4 @@ const Feed = () => {
 }
 
 export default Feed
+

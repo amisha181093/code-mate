@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api";
+import { useNavigate } from "react-router-dom";
+
 
 const AuthForm = () => {
     const [isLogin, setIsLogin] = useState(false); // toggle between login/signup
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            navigate('/feed');
+        }
+    }, []);
 
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
         age: "",
+        phoneNumber: "",
+        address: "",
         gender: "",
         email: "",
         password: "",
@@ -45,13 +57,16 @@ const AuthForm = () => {
                 // console.log("Login response:", data);
 
                 // ✅ Save token for future requests
-                localStorage.setItem("token", data.token);
-
+                localStorage.setItem("user", JSON.stringify(data.data));
+                navigate('/feed');
             } else {
                 /* SIGNUP API CALL*/
-                const { data } = await api.post("/auth/signup", formData);
+                formData.age = parseInt(formData.age);
+                const { data } = await api.post("/auth/register", formData);
                 setSuccess("Signup successful! Please login.");
-                console.log("Signup response:", data);
+                localStorage.setItem('user', JSON.stringify(data.data));
+                // console.log("Signup response:", data);
+                navigate('/feed');
             }
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
@@ -101,6 +116,16 @@ const AuthForm = () => {
                                 placeholder="Age"
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                             />
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleChange}
+                                placeholder="Phone Number"
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            />
+                            <textarea className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400" name="address" value={formData.address} onChange={handleChange}>
+                            </textarea>
 
                             {/* Gender */}
                             <select
@@ -110,9 +135,9 @@ const AuthForm = () => {
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                             >
                                 <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
                             </select>
                         </>
                     )}
@@ -139,8 +164,20 @@ const AuthForm = () => {
 
                     {/* Submit Button */}
                     <button
-                        type=""
-                        className="w-full py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-pink-500 to-orange-400 hover:opacity-90"
+                        type="submit"
+                        disabled={
+                            loading ||
+                            (isLogin
+                                ? !formData.email || !formData.password
+                                : !formData.firstName ||
+                                !formData.lastName ||
+                                !formData.age ||
+                                !formData.phoneNumber ||
+                                !formData.address ||
+                                !formData.gender ||
+                                !formData.email ||
+                                !formData.password)
+                        } className="cursor-pointer w-full py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-pink-500 to-orange-400 hover:opacity-60 disabled:bg-none disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
                         {isLogin ? "Login" : "Sign Up"}
                     </button>
@@ -151,7 +188,8 @@ const AuthForm = () => {
                     {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
                     <button
                         onClick={() => setIsLogin(!isLogin)}
-                        className="text-pink-500 font-medium hover:underline"
+                        disabled={!formData.email || !formData.password}
+                        className="text-pink-500 font-medium cursor-pointer hover:underline disabled:cursor-not-allowed"
                     >
                         {isLogin ? "Sign Up" : "Login"}
                     </button>
