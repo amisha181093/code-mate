@@ -24,10 +24,9 @@ const AuthForm = () => {
         email: "",
         password: "",
     });
-    const [success, setSuccess] = useState("");
-    const [error, setError] = useState("");
+    const [success, setSuccess] = useState('');
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,20 +35,20 @@ const AuthForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError("");
-        setSuccess("");
+        setError('');
+        setSuccess('');
         if (isLogin) {
-            console.log("Login Data:", {
+            console.log('Login Data:', {
                 email: formData.email,
                 password: formData.password,
             });
         } else {
-            console.log("Signup Data:", formData);
+            console.log('Signup Data:', formData);
         }
         try {
             if (isLogin) {
                 /*LOGIN API CALl*/
-                const { data } = await api.post("/auth/login", {
+                const { data } = await api.post('/auth/login', {
                     email: formData.email,
                     password: formData.password,
                 });
@@ -69,7 +68,7 @@ const AuthForm = () => {
                 navigate('/feed');
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Something went wrong");
+            setError(err.response?.data?.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
@@ -80,7 +79,7 @@ const AuthForm = () => {
                 {/* Title */}
                 <h1 className="text-3xl font-bold text-center text-red-500">CodeMate</h1>
                 <p className="text-gray-500 text-center mb-6">
-                    {isLogin ? "Login to your account" : "Create your account"}
+                    {isLogin ? 'Login to your account' : 'Create your account'}
                 </p>
 
                 {/* Form */}
@@ -179,19 +178,19 @@ const AuthForm = () => {
                                 !formData.password)
                         } className="cursor-pointer w-full py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-pink-500 to-orange-400 hover:opacity-60 disabled:bg-none disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
-                        {isLogin ? "Login" : "Sign Up"}
+                        {isLogin ? 'Login' : 'Sign Up'}
                     </button>
                 </form>
 
                 {/* Toggle */}
                 <p className="mt-4 text-center text-sm text-gray-600">
-                    {isLogin ? "Don’t have an account?" : "Already have an account?"}{" "}
+                    {isLogin ? 'Don’t have an account?' : 'Already have an account?'}{' '}
                     <button
                         onClick={() => setIsLogin(!isLogin)}
                         disabled={!formData.email || !formData.password}
                         className="text-pink-500 font-medium cursor-pointer hover:underline disabled:cursor-not-allowed"
                     >
-                        {isLogin ? "Sign Up" : "Login"}
+                        {isLogin ? 'Sign Up' : 'Login'}
                     </button>
                 </p>
             </div>
@@ -200,4 +199,3 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
-
