@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Dummy from './pages/Dummy';
 import Help from './pages/Help';
+import Playground from './pages/Playground';
+import Users from './pages/Users';
 
 
 export default function App() {
@@ -25,6 +27,8 @@ export default function App() {
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/help" element={<Help />} />
       <Route path="/dummy" element={<Dummy />} />
+      <Route path="/users" element={<Users />} />
+      <Route path="/playground" element={<Playground/>}/>
       <Route path="*" element={<Signup />} />
 
     </Routes>
