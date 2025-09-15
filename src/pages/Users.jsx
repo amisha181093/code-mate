@@ -40,9 +40,35 @@ const userList = [
 ];
 
 const Users = () => {
+    const [users, setUsers] = React.useState(userList);
     useEffect(() => {
         localStorage.setItem('users', JSON.stringify(userList));
     }, []);
+
+    const addUser = () => {
+        console.log('Add User');
+        const user = {
+            firstName: 'Abhishek',
+            lastName: 'Kumar',
+            gender: 'male',
+            address: {
+                city: {
+                    pincode: 211311,
+                    name: 'Jakarta',
+                    area: 'Vasundhara - In',
+                },
+                landmark: {
+                    nearby: {
+                        place: 'Amity International School - In',
+                    },
+                },
+                country: 'Indonesia',
+            },
+        };
+        users.push(user);
+        setUsers([...users]);
+        localStorage.setItem('users', JSON.stringify(users));
+    };
 
     return (
         <div className="flex flex-row">
@@ -64,13 +90,16 @@ const Users = () => {
                     <option value="">Male</option>
                     <option value="">Female</option>
                 </select>
-                <button className="bg-blue-500 text-white p-2 m-2 rounded-lg w-96">
+                <button
+                    onClick={addUser}
+                    className="bg-blue-500 text-white p-2 m-2 rounded-lg w-96"
+                >
                     Create User
                 </button>
             </div>
             <div className="flex-1">
                 <h1 className="py-4 bg-orange-500 text-center mb-5">Created User List</h1>
-                {userList.map((item, index) => (
+                {users.map((item, index) => (
                     <div key={index} class="card bg-amber-200 w-96 shadow-sm rounded-3xl my-5 p-5">
                         <div class="card-body">
                             <div>
