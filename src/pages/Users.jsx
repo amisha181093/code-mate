@@ -6,6 +6,8 @@ const Users = () => {
     const [name, setName] = useState('');
     const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
+    const [isEditing, setIsEditing] = useState('');
+    const [editIndex, setEditIndex] = useState('');
 
     useEffect(() => {
         const userList = localStorage.getItem('users');
@@ -14,27 +16,53 @@ const Users = () => {
         }
     }, []);
 
-    const onDelete = () => {};
-    const onEdit = () => {};
-    const onAdd = () => {};
+    // Add or Update user
+    const handleSave = () => {
+        let updatedUsers = [...users];
 
-    const addUser = () => {
-        console.log('Add User');
-        const user = {
-            name,
-            email,
-            gender,
-        };
+        if (isEditing) {
+            // Update user
+            updatedUsers[editIndex] = { name, email, gender };
+        } else {
+            // Add new user
+            updatedUsers.push({ name, email, gender });
+        }
 
-        const updatedUsers = [...users];
-        updatedUsers.push(user);
         setUsers(updatedUsers);
-        localStorage.setItem('users', JSON.stringify(updatedUsers));
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
 
-        setName('');
-        setGender('');
-        setEmail('');
+        // Reset form
+        setName("");
+        setEmail("");
+        setGender("");
+        setIsEditing(false);
+        setEditIndex(null);
     };
+
+
+    const onDelete = (user) => {
+        const updatedUsers = users.filter((u) => u.email !== user.email);
+        setUsers(updatedUsers);
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+    };
+    const onEdit = (user, index) => {
+        setName(user.name);
+        setEmail(user.email);
+        setGender(user.gender);
+
+        setIsEditing(true);
+        setEditIndex(index);
+    };
+    const onAdd = () => {
+        setName("");
+        setEmail("");
+        setGender("");
+        setIsEditing(false);
+        setEditIndex(null);
+
+    };
+
+    const isFormValid = name && email && gender;
 
     return (
         <div className="flex flex-row mt-4">
@@ -67,9 +95,15 @@ const Users = () => {
                     <option value="female">Female</option>
                 </select>
                 <button
-                    onClick={addUser}
-                    className="bg-blue-950 text-white p-2 m-2 rounded-lg w-96"
+                    onClick={handleSave}
+                    disabled={!isFormValid}
+                    className={`p-2 m-2 w-96 rounded-lg 
+            ${!isFormValid
+                            ? "bg-gray-600 text-white cursor-not-allowed"
+                            : "bg-blue-950 text-white"
+                        }`}
                 >
+                    {isEditing ? "Update User" : "Create User"}
                     Create User
                 </button>
             </div>
@@ -103,7 +137,7 @@ const Users = () => {
                         {/* Edit & Delete Buttons */}
                         <div className="absolute top-3 right-3 flex space-x-3">
                             <button
-                                onClick={() => onEdit(item)}
+                                onClick={() => onEdit(item, index)}
                                 className="text-blue-700 hover:text-blue-900"
                             >
                                 <FaEdit size={18} />

@@ -11,6 +11,7 @@ import Dummy from './pages/Dummy';
 import Help from './pages/Help';
 import Playground from './pages/Playground';
 import Users from './pages/Users';
+import Todo from './pages/Todo';
 
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/dummy" element={<Dummy />} />
       <Route path="/users" element={<Users />} />
       <Route path="/playground" element={<Playground/>}/>
+      <Route path="/todo" element={<Todo/>}/>
       <Route path="*" element={<Signup />} />
 
     </Routes>
